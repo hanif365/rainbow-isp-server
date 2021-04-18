@@ -48,15 +48,13 @@ client.connect(err => {
         serviceCollection.find()
             .toArray((err, package) => {
                 res.send(package)
-                // console.log('From db ',package)
             })
     })
 
-    // New code
+
 
     app.post('/addReview', (req, res) => {
         const newReview = req.body;
-        // console.log('Adding new Review', newReview);
         reviewCollection.insertOne(newReview)
             .then(result => {
                 console.log('Inserted Count ', result.insertedCount)
@@ -69,7 +67,6 @@ client.connect(err => {
         reviewCollection.find()
             .toArray((err, reviewList) => {
                 res.send(reviewList)
-                // console.log('From db ',reviewList)
             })
     })
 
@@ -84,7 +81,6 @@ client.connect(err => {
             })
     })
 
-    // New code
 
     app.get('/service/:serviceId', (req, res) => {
         console.log(req.params.serviceId)
@@ -100,58 +96,16 @@ client.connect(err => {
 
     app.post('/addOrder', (req, res) => {
         const order = req.body;
-        // console.log(products)
         ordersCollection.insertOne(order)
             .then(result => {
-                // console.log(result);
-                // console.log(result.insertedCount);
                 res.send(result.insertedCount > 0)
             })
     })
 
-
-    // new code incomplete
-
-    // app.get('/service/:serviceId', (req, res) => {
-    //     console.log(req.params.serviceId)
-    //     ordersCollection.find({ _id: ObjectId(req.params.serviceId) })
-    //         .toArray((err, service) => {
-
-    //             res.send(service)
-    //             console.log('From database', service);
-    //         })
-    // })
-
-
-    // test code important
-    // app.get('/orders', (req, res) => {
-    //     ordersCollection.find()
-    //         .toArray((err, orderList) => {
-    //             res.send(orderList)
-    //             // console.log('From db ', orderList);
-    //         })
-    // })
-
-
-    // test code
-
-    // app.get('/orders', (req, res) => {
-    //     // console.log(req.query.email);
-    //     ordersCollection.find({email: req.query.email})
-    //         .toArray((err, orderList) => {
-    //             res.send(orderList)
-    //             // console.log('From db ', orderList);
-    //         })
-    // })
-
-    // working code
-
     app.get('/booking', (req, res) => {
-        // console.log(req.query.email);
         ordersCollection.find({ email: req.query.email })
             .toArray((err, orderList) => {
                 res.send(orderList)
-                // console.log('From db ', orderList);
             })
     })
 
@@ -182,11 +136,9 @@ client.connect(err => {
 
     })
 
-    // working code
 
     app.post('/addAdmin', (req, res) => {
         const newAdmin = req.body;
-        // console.log('Adding new Review', newAdmin);
         adminCollection.insertOne(newAdmin)
             .then(result => {
                 console.log('Inserted Count ', result.insertedCount)
