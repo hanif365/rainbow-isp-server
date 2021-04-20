@@ -13,11 +13,9 @@ app.use(cors());
 app.use(bodyParser.json());
 
 
-
 app.get('/', (req, res) => {
     res.send('Hello World!!! DB Working!!!!')
 })
-
 
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.cwfp8.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`;
@@ -51,8 +49,6 @@ client.connect(err => {
             })
     })
 
-
-
     app.post('/addReview', (req, res) => {
         const newReview = req.body;
         reviewCollection.insertOne(newReview)
@@ -62,16 +58,12 @@ client.connect(err => {
             })
     })
 
-
     app.get('/review', (req, res) => {
         reviewCollection.find()
             .toArray((err, reviewList) => {
                 res.send(reviewList)
             })
     })
-
-
-
 
     app.delete('/delete/:id', (req, res) => {
         console.log(req.params.id);
@@ -92,8 +84,6 @@ client.connect(err => {
             })
     })
 
-
-
     app.post('/addOrder', (req, res) => {
         const order = req.body;
         ordersCollection.insertOne(order)
@@ -102,40 +92,21 @@ client.connect(err => {
             })
     })
 
+    app.get('/orders', (req, res) => {
+        console.log(req.query.email);
+        ordersCollection.find()
+            .toArray((err, orderList) => {
+                res.send(orderList)
+            })
+
+    })
+
     app.get('/booking', (req, res) => {
         ordersCollection.find({ email: req.query.email })
             .toArray((err, orderList) => {
                 res.send(orderList)
             })
     })
-
-    // working code
-
-    // app.get('/orders', (req, res) => {
-    //     console.log(req.query.email);
-    //     if (req.query.email == 'm.a.hanifkhan64@gmail.com') {
-    //         ordersCollection.find()
-    //             .toArray((err, orderList) => {
-    //                 res.send(orderList)
-    //                 // console.log('From db ', orderList);
-    //             })
-    //     }
-
-    // })
-
-    // test code
-    app.get('/orders', (req, res) => {
-        console.log(req.query.email);
-        if (adminCollection.find({email: req.query.email})) {
-            ordersCollection.find()
-                .toArray((err, orderList) => {
-                    res.send(orderList)
-                    // console.log('From db ', orderList);
-                })
-        }
-
-    })
-
 
     app.post('/addAdmin', (req, res) => {
         const newAdmin = req.body;
@@ -146,10 +117,54 @@ client.connect(err => {
             })
     })
 
+    app.post('/isAdmin', (req, res) => {
+        const email = req.body.email;
+        adminCollection.find({ email: email })
+            .toArray((err, admin) => {
+                res.send(admin.length > 0);
+            })
+    })
 
 
+    
+    // code for status change
+    
+    app.patch('/done/:id', (req, res) => {
+        console.log('id',req.params.id);
+        console.log('status',req.body.status);
+        ordersCollection.updateOne({ _id: ObjectId(req.params.id) },
+            {
+                $set: { 'shipment.Status': 'Done' }
+            })
+                .then(result => {
+                    console.log(result);
+                })
+    })
 
-    //   client.close();
+    app.patch('/ongoing/:id', (req, res) => {
+        console.log('id',req.params.id);
+        console.log('status',req.body.status);
+        ordersCollection.updateOne({ _id: ObjectId(req.params.id) },
+            {
+                $set: { 'shipment.Status': 'Ongoing' }
+            })
+                .then(result => {
+                    console.log(result);
+                })
+    })
+
+    app.patch('/pending/:id', (req, res) => {
+        console.log('id',req.params.id);
+        console.log('status',req.body.status);
+        ordersCollection.updateOne({ _id: ObjectId(req.params.id) },
+            {
+                $set: { 'shipment.Status': 'Pending' }
+            })
+                .then(result => {
+                    console.log(result);
+                })
+    })
+
 });
 
 
