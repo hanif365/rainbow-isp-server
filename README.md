@@ -10,4 +10,8 @@ Features Added:
 
 (4) Also added Payment and Shipment related Data easily
 
+(5) Hosting in heroku website
+
 Live Project Link : https://rainbow-isp.web.app/
+
+My LinkedIn Profile Link : https://www.linkedin.com/in/programmerhanif/
